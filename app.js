@@ -1,9 +1,10 @@
-const express = require ('express');    
+const express = require ('express');  
+const moment = require ('moment');
 const app = express();
 
 // define a route for my endpoint
 
-app.get('/get-info', (req, res) => {
+app.get('/api', (req, res) => {
     const slackName = req.query.slack_name;
     const track = req.query.track;
 
@@ -15,11 +16,15 @@ app.get('/get-info', (req, res) => {
     } ;
 
 
-    // get day and time 
+    // get day of the week
 
-    const currentDate = new Date();
-    const currentDay = currentDate.toLocaleDateString('en-US', { weekday: 'long' });
-    const utcTime = currentDate.toISOString();
+    const currentDay = moment().utc().format('dddd');
+
+    // current UTC with time validation of +/-2 mins
+    const currentUtcTime = moment().utcOffset(0).format('YYYY-MM-DDTHH:mm:ss[Z]');
+
+
+
 
 
     // send response
@@ -28,9 +33,9 @@ app.get('/get-info', (req, res) => {
         slack_name: slackName,
         track: track,
         current_day: currentDay,
-        utc_time: utcTime,
-        github_file_url: 
-        github_repo_url:
+        utc_time: currentUtcTime,
+        github_file_url: 'https://github.com/pipthablack/hngt1/blob/main/app.js',
+        github_repo_url:'https://github.com/pipthablack/hngt1',
         status_code: 200,
     };
 
